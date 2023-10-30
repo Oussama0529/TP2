@@ -28,6 +28,26 @@ public class StatementPrinterTests {
         verify(result);
     }
 
+    @Test
+    void exampleStatementwithdiscount() {
+
+        HashMap<String, Play> plays = new HashMap<>();
+        plays.put("hamlet",  new Play("Hamlet", "tragedy"));
+        plays.put("as-like",  new Play("As You Like It", "comedy"));
+        plays.put("othello",  new Play("Othello", "tragedy"));
+
+        Invoice invoice = new Invoice("BigCo", List.of(
+                new Performance("hamlet", 155),
+                new Performance("as-like", 35),
+                new Performance("othello", 140)));
+
+        StatementPrinter statementPrinter = new StatementPrinter();
+        var result = statementPrinter.print(invoice, plays,PrintFormat.TEXT);
+
+        verify(result);
+    }
+
+
     void exampleStatementhtml() {
 
         HashMap<String, Play> plays = new HashMap<>();

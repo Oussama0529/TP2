@@ -37,6 +37,13 @@ public class StatementPrinter {
     }
     result.append(String.format("Amount owed is %s\n", frmt.format(totalAmount)));
     result.append(String.format("You earned %s credits\n", volumeCredits));
+    if (ReductionApplicable(totalAmount,volumeCredits)){
+      result.append(
+        "--------------------------------------------\n"+
+        "A loyalty discount of €15 has been applied.\n");
+      result.append(String.format("Amount owed after discount: %s\n",frmt.format(totalAmount-15)));
+      result.append(String.format("Credit after discount: %s ",String.valueOf(volumeCredits-150)));
+    }   
     return result.toString();
   }
 
@@ -91,6 +98,16 @@ public class StatementPrinter {
         "</html>";
     return htmlContent;
   }
+
+  public boolean ReductionApplicable(double totalAmount,int totalCredit){
+    boolean applied = false;
+    if (totalCredit>=150 && totalAmount>=15){
+      totalCredit -= 150;
+      totalAmount -= 15;
+      applied = true;
+    } 
+    return applied;
+  } 
 
 
 //  public static void main(String[] args) {

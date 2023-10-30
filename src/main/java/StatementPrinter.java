@@ -6,7 +6,18 @@ import java.util.*;
 
 public class StatementPrinter {
 
-  public StringBuffer print(Invoice invoice, HashMap<String, Play> plays) {
+  public String print(Invoice invoice,HashMap<String, Play> plays, PrintFormat format) {
+    switch (format) {
+      case TEXT:
+        return this.printText(invoice,plays);
+      case HTML:
+        return this.printHTML(invoice,plays);
+      default:
+        throw new Error("unknown print format: ${format}");
+    }
+
+  } 
+  public String printText(Invoice invoice, HashMap<String, Play> plays) {
     double totalAmount = 0;
     int volumeCredits = 0;
 
@@ -26,10 +37,10 @@ public class StatementPrinter {
     }
     result.append(String.format("Amount owed is %s\n", frmt.format(totalAmount)));
     result.append(String.format("You earned %s credits\n", volumeCredits));
-    return result;
+    return result.toString();
   }
 
-  public String toHtml(Invoice invoice, HashMap<String,Play> plays) {
+  public String printHTML(Invoice invoice, HashMap<String,Play> plays) {
 
     StringBuilder result = new StringBuilder();
     NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);

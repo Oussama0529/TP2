@@ -23,7 +23,25 @@ public class StatementPrinterTests {
                 new Performance("othello", 40)));
 
         StatementPrinter statementPrinter = new StatementPrinter();
-        var result = statementPrinter.print(invoice, plays);
+        var result = statementPrinter.print(invoice, plays,PrintFormat.TEXT);
+
+        verify(result);
+    }
+
+    void exampleStatementhtml() {
+
+        HashMap<String, Play> plays = new HashMap<>();
+        plays.put("hamlet",  new Play("Hamlet", "tragedy"));
+        plays.put("as-like",  new Play("As You Like It", "comedy"));
+        plays.put("othello",  new Play("Othello", "tragedy"));
+
+        Invoice invoice = new Invoice("BigCo", List.of(
+                new Performance("hamlet", 55),
+                new Performance("as-like", 35),
+                new Performance("othello", 40)));
+
+        StatementPrinter statementPrinter = new StatementPrinter();
+        var result = statementPrinter.print(invoice, plays,PrintFormat.HTML);
 
         verify(result);
     }
@@ -41,7 +59,7 @@ public class StatementPrinterTests {
 
         StatementPrinter statementPrinter = new StatementPrinter();
         Assertions.assertThrows(Error.class, () -> {
-            statementPrinter.print(invoice, plays);
+            statementPrinter.print(invoice, plays,PrintFormat.TEXT);
         });
     }
 }

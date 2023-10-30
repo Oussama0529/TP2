@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Generated HTML File</title>
+<style> table, th, td {border: 1px solid black;}</style></head>
+<body>
+<h1>Invoice</h1><p>Client :BigCo</p><table><tr> <th>Piece</th><th>Price</th><th>Seats Solde</th></tr><tr> <td>Hamlet</td> <td>$1,650.00</td> <td>155 </td></tr> <tr> <td>As You Like It</td> <td>$580.00</td> <td>35 </td></tr> <tr> <td>Othello</td> <td>$1,500.00</td> <td>140 </td></tr> <tr><td>Total owed</td><td>$3,730.00</td></tr><tr><td>Fidelity points earned</td><td>247</td></tr></table><p>A loyalty discount of €15 has been applied.</p>
+    <p>Amount owed after discount: $3,715.00</p>
+    <p>Credit after discount: 97</p></body>
+</html>

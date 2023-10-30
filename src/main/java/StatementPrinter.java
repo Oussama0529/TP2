@@ -1,6 +1,3 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.*;
 
@@ -20,8 +17,8 @@ public class StatementPrinter {
   public String printText(Invoice invoice, HashMap<String, Play> plays) {
     double totalAmount = 0;
     int volumeCredits = 0;
-
-    StringBuffer result = new StringBuffer(String.format("Statement for %s\n", invoice.customer));
+    
+    StringBuffer result = new StringBuffer(String.format("Statement for %s\n", invoice.customer.name));
 
     NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
@@ -37,7 +34,10 @@ public class StatementPrinter {
     }
     result.append(String.format("Amount owed is %s\n", frmt.format(totalAmount)));
     result.append(String.format("You earned %s credits\n", volumeCredits));
+    invoice.customer.Addsolde(volumeCredits);
+
     if (ReductionApplicable(totalAmount,volumeCredits)){
+      invoice.customer.updateSolde();
       result.append(
         "--------------------------------------------\n"+
         "A loyalty discount of €15 has been applied.\n");
@@ -78,8 +78,15 @@ public class StatementPrinter {
       String.format("<tr><td>Total owed</td><td>%s</td></tr>", frmt.format(totalAmount))
     );
     result.append(String.format("<tr><td>Fidelity points earned</td><td>%s</td></tr>", volumeCredits));
- 
-
+    invoice.customer.Addsolde(volumeCredits);
+    String discount = "";
+    if (ReductionApplicable(totalAmount,volumeCredits)){ 
+      invoice.customer.updateSolde();
+      discount = 
+          "<p>A loyalty discount of €15 has been applied.</p>\n" + //
+          String.format("    <p>Amount owed after discount: %s</p>\n",frmt.format(totalAmount-15)) + //
+          String.format("    <p>Credit after discount: %s</p>",String.valueOf(volumeCredits-150));
+    } 
     String htmlContent = 
       "<!DOCTYPE html>\n" +
         "<html>\n" +
@@ -89,11 +96,12 @@ public class StatementPrinter {
           "</head>\n" +
             "<body>\n" +
             "<h1>" + "Invoice" + "</h1>" +
-            "<p>" + "Client :" + invoice.customer + "</p>" +
+            "<p>" + "Client :" + invoice.customer.name + "</p>" +
             "<table>"+
               "<tr> "+ "<th>"+"Piece"+"</th>"+"<th>"+"Price"+"</th>"+"<th>"+"Seats Solde"+"</th>"+"</tr>"+ 
               result +
             "</table>"+
+            discount +
           "</body>\n" +
         "</html>";
     return htmlContent;
@@ -110,20 +118,6 @@ public class StatementPrinter {
   } 
 
 
-//  public static void main(String[] args) {
-//          String htmlFilePath = "/home/local.isima.fr/ounajib/Desktop/TP2gl/src/test/java/StatementPrinterTests.html.approved.txt"; // Path to the output HTML file
-//          HashMap<String, Play> plays = new HashMap<>();
-//         plays.put("hamlet",  new Play("Hamlet", "tragedy"));
-//         plays.put("as-like",  new Play("As You Like It", "comedy"));
-//         plays.put("othello",  new Play("Othello", "tragedy"));
-
-//         Invoice invoice = new Invoice("BigCo", List.of(
-//                 new Performance("hamlet", 55),
-//                 new Performance("as-like", 35),
-//                 new Performance("othello", 40)));
-
-//             toHtml(invoice, plays, htmlFilePath);
-//      }
 
 
 

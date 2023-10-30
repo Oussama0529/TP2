@@ -2,11 +2,11 @@ import java.util.*;
 
 public class Invoice {
 
-  public String customer;
+  public Customer customer;
   public List<Performance> performances;
 
-  public Invoice(String customer, List<Performance> performances) {
-    this.customer = customer;
+  public Invoice(String name, List<Performance> performances) {
+    this.customer = new Customer(name, 0, 0);
     this.performances = performances;
   }
 }

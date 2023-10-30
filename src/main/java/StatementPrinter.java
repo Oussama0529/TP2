@@ -4,7 +4,7 @@ import java.util.*;
 public class StatementPrinter {
 
   public StringBuffer print(Invoice invoice, HashMap<String, Play> plays) {
-    int totalAmount = 0;
+    double totalAmount = 0;
     int volumeCredits = 0;
 
     StringBuffer result = new StringBuffer(String.format("Statement for %s\n", invoice.customer));
@@ -14,24 +14,29 @@ public class StatementPrinter {
     for (Performance perf : invoice.performances) {
       Play play = plays.get(perf.playID);
 
-      int thisAmount =CalculateAmount(perf.audience, play.type);
-
-      // add volume credits
-      volumeCredits += Math.max(perf.audience - 30, 0);
-      // add extra credit for every ten comedy attendees
-      if ("comedy".equals(play.type)) volumeCredits += Math.floor(perf.audience / 5);
+      double thisAmount =CalculateAmount(perf.audience, play.type);
+      volumeCredits += CalculateVolumeCreditsIncrease(perf.audience,play.type);
 
       // print line for this order
-      result.append(String.format("  %s: %s (%s seats)\n", play.name, frmt.format(thisAmount / 100), perf.audience));
+      result.append(String.format("  %s: %s (%s seats)\n", play.name, frmt.format(thisAmount), perf.audience));
       totalAmount += thisAmount;
     }
-    result.append(String.format("Amount owed is %s\n", frmt.format(totalAmount / 100)));
+    result.append(String.format("Amount owed is %s\n", frmt.format(totalAmount)));
     result.append(String.format("You earned %s credits\n", volumeCredits));
     return result;
   }
 
-  private int CalculateAmount(int audience,String type){
-    int thisAmount  = 0;
+  private int CalculateVolumeCreditsIncrease(int audience,String type){
+    int volumeCreditsIncrease =0 ;
+    
+    volumeCreditsIncrease += Math.max(audience - 30, 0);
+
+    if ("comedy".equals(type)) volumeCreditsIncrease += Math.floor(audience / 5);
+
+    return volumeCreditsIncrease;
+  }     
+  private double CalculateAmount(int audience,String type){
+    double thisAmount  = 0;
     switch (type) {
         case "tragedy":
           thisAmount = CalculateAmountTragedy(audience);
@@ -45,20 +50,20 @@ public class StatementPrinter {
     return thisAmount;
   } 
 
-  private int CalculateAmountTragedy(int audience) {
-    int thisAmount = 40000;
+  private double CalculateAmountTragedy(int audience) {
+    double thisAmount = 400;
     if (audience > 30) {
-      thisAmount += 1000 * (audience - 30);
+      thisAmount += 10 * (audience - 30);
     }
     return thisAmount;
   }  
 
-  private int CalculateAmountComedy(int audience) {
-    int thisAmount = 30000;
+  private double CalculateAmountComedy(int audience) {
+    double thisAmount = 300;
     if (audience > 20) {
-      thisAmount += 10000 + 500 * (audience - 20);
+      thisAmount += 100 + 5 * (audience - 20);
     }
-    thisAmount += 300 *audience;
+    thisAmount += 3 *audience;
     return thisAmount;
   }  
 
